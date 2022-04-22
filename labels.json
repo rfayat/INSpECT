@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "name": "cleaning",
+      "labels": [
+        "grooming",
+        "scratching"
+      ]
+    },
+    {
+      "name": "moving",
+      "labels": [
+        "running"
+      ]
+    }
+  ]
+}

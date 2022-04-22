@@ -1,0 +1,89 @@
+{
+  "segments": [
+    {
+      "subject": "RF484",
+      "date": "01/04/2022",
+      "session": "test",
+      "uid": "RF484_220401_test",
+      "folder": ".",
+      "files": [
+        "f1.avi",
+        "f2.avi",
+        "f3.avi",
+        "f4.avi",
+        "f5.avi"
+      ],
+      "frames": {
+        "begin": 12,
+        "end": 50
+      },
+      "annotations": [
+        {
+          "user": "Ghyomm",
+          "date": "01/04/2022",
+          "labels": [
+            "grooming",
+            "scratching"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "RF484",
+      "date": "01/04/2022",
+      "session": "test",
+      "uid": "RF484_220401_test",
+      "folder": ".",
+      "files": [
+        "f1.avi",
+        "f2.avi",
+        "f3.avi",
+        "f4.avi",
+        "f5.avi"
+      ],
+      "frames": {
+        "begin": 12,
+        "end": 50
+      },
+      "annotations": [
+        {
+          "user": "Ghyomm",
+          "date": "01/04/2022",
+          "labels": [
+            "grooming",
+            "scratching"
+          ]
+        }
+      ]
+    },
+    {
+      "subject": "RF484",
+      "date": "01/04/2022",
+      "session": "test",
+      "uid": "RF484_220401_test",
+      "folder": ".",
+      "files": [
+        "f1.avi",
+        "f2.avi",
+        "f3.avi",
+        "f4.avi",
+        "f5.avi"
+      ],
+      "frames": {
+        "begin": 12,
+        "end": 50
+      },
+      "annotations": [
+        {
+          "user": "Ghyomm",
+          "date": "01/04/2022",
+          "labels": [
+            "grooming",
+            "scratching"
+          ]
+        }
+      ]
+    }
+  ],
+  "notes": null
+}
