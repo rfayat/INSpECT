@@ -1,9 +1,7 @@
 from pathlib import Path
-import sys
 from typing import List
 from functools import partial
 from core.models import Category
-from core import crud
 from typing import Optional
 import PySide2
 from PySide2 import QtWidgets, QtCore
@@ -13,9 +11,12 @@ from PySide2.QtCore import QRectF, Slot, Signal
 
 class VideoTab(QtWidgets.QWidget):
 
-    def __init__(self, parent: Optional[PySide2.QtWidgets.QWidget] = None) -> None:
+    def __init__(self, parent: Optional[QtWidgets.QWidget] = None) -> None:
         super().__init__(parent)
+        main_lyt = QtWidgets.QVBoxLayout(self)
         self.display = Display(self)
+        main_lyt.addWidget(self.display)
+        self.setMinimumWidth(1024)
 
     @Slot(QImage)
     def on_new_image(self, image: QImage):
@@ -88,11 +89,19 @@ class MultiVid(QtWidgets.QWidget):
     def __init__(self, parent: Optional[PySide2.QtWidgets.QWidget] = None,
                  min_vid: int = 5) -> None:
         super().__init__(parent)
+        lyt = QtWidgets.QHBoxLayout(self)
         self._min_vid = min_vid
         self.l_video_tabs = [VideoTab(self) for _ in range(min_vid)]
         self.tabs = QtWidgets.QTabWidget(self)
         for ix, tab in enumerate(self.l_video_tabs):
             self.tabs.addTab(tab, f'Camera &{ix+1}')
+        lyt.addWidget(self.tabs)
+        self.setMinimumSize(1024, 780)
+
+    def set_frames(self, images: List[QImage]):
+        for frame, tab in zip(images, self.l_video_tabs):
+            tab.on_new_image(frame)
+            print('Setting frame')
 
 
 class Player(QtWidgets.QWidget):
@@ -176,33 +185,6 @@ class LabelPanel(QtWidgets.QWidget):
         self.states[category] = state
 
 
-class MainWindow(QtWidgets.QMainWindow):
-    def __init__(self, parent: QtWidgets.QWidget = None):
-        super().__init__(parent)
-        self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        main_wdg = QtWidgets.QWidget(self)
-        self.setCentralWidget(main_wdg)
-        lyt = QtWidgets.QHBoxLayout(main_wdg)
-        splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
-        # Left
-        left_wdg = QtWidgets.QWidget()
-        left_lyt = QtWidgets.QVBoxLayout(left_wdg)
-        self.path_picker = PathPicker(self)
-        self.video_tabs = MultiVid(self)
-        self.player = Player(self)
-        left_lyt.addWidget(self.path_picker)
-        left_lyt.addWidget(self.video_tabs)
-        left_lyt.addWidget(self.player)
-        splitter.addWidget(left_wdg)
-        # Right
-        categories = crud.load_labels('labels.json')
-        self.panel = LabelPanel(categories)
-        splitter.addWidget(self.panel)
-        # lyt.addWidget(self.panel)
-        lyt.addWidget(splitter)
-        self.show()
-
-
 class PathPicker(QtWidgets.QWidget):
     new_path = QtCore.Signal(str)
 
@@ -236,10 +218,4 @@ class PathPicker(QtWidgets.QWidget):
                                                "JSON files (*.json)")
         if dpath != '':
             self.path = dpath
-
-
-if __name__ == '__main__':
-    qApp = QtWidgets.QApplication(sys.argv)
-    w = MainWindow()
-    sys.exit(qApp.exec_())
 
