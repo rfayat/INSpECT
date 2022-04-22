@@ -11,6 +11,7 @@ class VideoReader(QtCore.QObject):
         super().__init__()
         self.video_files = video_files
         self.videos = [Video(vf) for vf in video_files]
+        self.n_frames = len(self.videos[0])
         self._c_frame = 0
         self._interval = interval
         self._timer = QtCore.QTimer()
@@ -60,4 +61,7 @@ class VideoReader(QtCore.QObject):
         frames = [vid[self.c_frame] for vid in self.videos]
         images = [self.np_to_qimage(np_im) for np_im in frames]
         self.frames_ready.emit(images)
+
+    def change_speed(self, interval: int):
+        self.interval = interval
 

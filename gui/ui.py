@@ -35,12 +35,12 @@ class UI(QtWidgets.QMainWindow):
         self.video_reader.c_frame = 1
         self.player.play.connect(self.video_reader.start)
         self.player.stop.connect(self.video_reader.stop)
+        self.player.speed_adjusted.connect(self.video_reader.change_speed)
         self.setMinimumSize(1500, 1000)
         self.show()
 
     @Slot(list)
     def new_frames(self, images):
-        print(images)
         self.video_tabs.set_frames(images)
 
 

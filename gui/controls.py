@@ -101,7 +101,6 @@ class MultiVid(QtWidgets.QWidget):
     def set_frames(self, images: List[QImage]):
         for frame, tab in zip(images, self.l_video_tabs):
             tab.on_new_image(frame)
-            print('Setting frame')
 
 
 class Player(QtWidgets.QWidget):
@@ -114,9 +113,9 @@ class Player(QtWidgets.QWidget):
         self.play_btn = QtWidgets.QPushButton('&Play')
         self.stop_btn = QtWidgets.QPushButton('&Stop')
         self.speed_sl = QtWidgets.QSlider(QtCore.Qt.Horizontal)
-        self.speed_sl.setRange(-500, -20)  # Large value = large interval = slow speed
+        self.speed_sl.setRange(-500, -5)  # Large value = large interval = slow speed
         self.speed_sl.setSingleStep(1)
-        self.speed_sl.setValue(30)
+        self.speed_sl.setValue(-30)
         lyt = QtWidgets.QHBoxLayout(self)
         lyt.addWidget(self.play_btn)
         lyt.addWidget(self.stop_btn)
