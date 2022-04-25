@@ -7,14 +7,14 @@
       "uid": "RF484_220401_test",
       "folder": ".",
       "files": [
-        "f1.avi",
-        "f2.avi",
-        "f3.avi",
-        "f4.avi",
-        "f5.avi"
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-007200-cam_45810316-exampleID0003.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-007200-cam_02020172-exampleID0003.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-007200-cam_02020176-exampleID0003.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-007200-cam_49020380-exampleID0003.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-007200-cam_49020382-exampleID0003.avi"
       ],
       "frames": {
-        "begin": 12,
+        "begin": 0,
         "end": 50
       },
       "annotations": [
@@ -35,14 +35,14 @@
       "uid": "RF484_220401_test",
       "folder": ".",
       "files": [
-        "f1.avi",
-        "f2.avi",
-        "f3.avi",
-        "f4.avi",
-        "f5.avi"
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_45810316-exampleID0001.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_49020380-exampleID0001.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_49020382-exampleID0001.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_02020172-exampleID0001.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_02020176-exampleID0001.avi"
       ],
       "frames": {
-        "begin": 12,
+        "begin": 0,
         "end": 50
       },
       "annotations": [
@@ -63,14 +63,14 @@
       "uid": "RF484_220401_test",
       "folder": ".",
       "files": [
-        "f1.avi",
-        "f2.avi",
-        "f3.avi",
-        "f4.avi",
-        "f5.avi"
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_49020380-exampleID0002.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_02020176-exampleID0002.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_49020382-exampleID0002.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_02020172-exampleID0002.avi",
+        "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_45810316-exampleID0002.avi"
       ],
       "frames": {
-        "begin": 12,
+        "begin": 0,
         "end": 50
       },
       "annotations": [

@@ -1,24 +1,46 @@
-import numpy as np
-from typing import List
+from queue import Queue
+from typing import List, Optional
 from pims import Video
 from PySide2 import QtCore, QtGui
 
 
 class VideoReader(QtCore.QObject):
-    frames_ready = QtCore.Signal(list)
+    frames_ready = QtCore.Signal()
 
-    def __init__(self, video_files: List[str], interval: int = 30) -> None:
+    def __init__(self, video_files: Optional[List[str]] = None, interval: int = 30) -> None:
         super().__init__()
-        self.video_files = video_files
-        self.videos = [Video(vf) for vf in video_files]
-        self.n_frames = len(self.videos[0])
+        self._video_files = video_files
+        if video_files is not None:
+            self._videos = [Video(vf) for vf in video_files]
+        else:
+            self._videos = None
+        self._n_frames = 0
         self._c_frame = 0
+        self.begin = 0
+        self.end = 0
+        self.queue = Queue()
         self._interval = interval
         self._timer = QtCore.QTimer()
         self._timer.setSingleShot(False)
         self._timer.setInterval(interval)
         self._timer.timeout.connect(self.get_next_frames)
         self.c_frame = 0
+
+    @property
+    def n_frames(self):
+        if self._videos is None:
+            return -1
+        return len(self._videos[0])
+
+    @property
+    def video_files(self):
+        return self._video_files
+
+    @video_files.setter
+    def video_files(self, value):
+        self.close_all_videos()
+        self._video_files = value
+        self.open_all_videos()
 
     def start(self):
         self._timer.start()
@@ -43,25 +65,47 @@ class VideoReader(QtCore.QObject):
 
     @c_frame.setter
     def c_frame(self, value):
+        if value < self.begin:
+            value = self.end - 1
+        if value >= self.end:
+            value = self.begin
         self._c_frame = value
         self.get_current_frames()
 
     def get_next_frames(self):
         self.c_frame += 1
 
-    @staticmethod
-    def np_to_qimage(np_img):
-        # np_img = np.atleast_3d(np_img)
-        height, width, channels = np_img.shape
-        # bgra = np.zeros([height, width, 4], dtype=np.uint8)
-        # bgra[:, :, 0:3] = np_img
-        return QtGui.QImage(np_img, width, height, channels*width, QtGui.QImage.Format_RGB888)
+    def get_frames(self, frame_ix):
+        if self._videos is None:
+            return None
+        try:
+            frames = [vid[frame_ix].copy() for vid in self._videos]
+        except AttributeError:
+            # We reached the end of the video and can't seek
+            self.close_all_videos()
+            self.open_all_videos()
+            frames = self.get_frames(frame_ix)
+        return frames
 
     def get_current_frames(self):
-        frames = [vid[self.c_frame] for vid in self.videos]
-        images = [self.np_to_qimage(np_im) for np_im in frames]
-        self.frames_ready.emit(images)
+        frames = self.get_frames(self.c_frame)
+        if frames is None:
+            return
+        self.queue.put(frames)
+        # images = [self.np_to_qimage(np_im) for np_im in frames]
+        self.frames_ready.emit()
 
     def change_speed(self, interval: int):
         self.interval = interval
+
+    def close_all_videos(self):
+        if self._videos is not None:
+            for vf in self._videos:
+                vf.close()
+        while not self.queue.empty():
+            print('emptying')
+            self.queue.get_nowait()
+
+    def open_all_videos(self):
+        self._videos = [Video(vf) for vf in self.video_files]
 

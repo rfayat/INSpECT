@@ -1,11 +1,12 @@
+from queue import Empty, Queue
 from pathlib import Path
 from typing import List
 from functools import partial
 from core.models import Category
 from typing import Optional
 import PySide2
-from PySide2 import QtWidgets, QtCore
-from PySide2.QtGui import QImage, QPainter
+from PySide2 import QtWidgets, QtCore, QtGui
+from PySide2.QtGui import QImage, QPainter, QPixmap
 from PySide2.QtCore import QRectF, Slot, Signal
 
 
@@ -15,12 +16,13 @@ class VideoTab(QtWidgets.QWidget):
         super().__init__(parent)
         main_lyt = QtWidgets.QVBoxLayout(self)
         self.display = Display(self)
+        # self.display = QtWidgets.QLabel(self)
         main_lyt.addWidget(self.display)
         self.setMinimumWidth(1024)
 
-    @Slot(QImage)
     def on_new_image(self, image: QImage):
         self.display.on_image_received(image)
+        # self.display.setPixmap(QPixmap(image))
 
 
 class Display(QtWidgets.QGraphicsView):
@@ -29,7 +31,6 @@ class Display(QtWidgets.QGraphicsView):
         self.__scene = CustomGraphicsScene(self)
         self.setScene(self.__scene)
 
-    @Slot(QImage)
     def on_image_received(self, image: QImage):
         self.__scene.set_image(image)
         self.update()
@@ -86,21 +87,38 @@ class CustomGraphicsScene(QtWidgets.QGraphicsScene):
 
 class MultiVid(QtWidgets.QWidget):
 
-    def __init__(self, parent: Optional[PySide2.QtWidgets.QWidget] = None,
+    def __init__(self, parent: Optional[PySide2.QtWidgets.QWidget], queue: Queue,
                  min_vid: int = 5) -> None:
         super().__init__(parent)
+        self.queue = queue
         lyt = QtWidgets.QHBoxLayout(self)
         self._min_vid = min_vid
         self.l_video_tabs = [VideoTab(self) for _ in range(min_vid)]
+        # self.l_video_tabs = [QtWidgets.QLabel(self) for _ in range(min_vid)]
         self.tabs = QtWidgets.QTabWidget(self)
         for ix, tab in enumerate(self.l_video_tabs):
+            # lyt.addWidget(tab)
             self.tabs.addTab(tab, f'Camera &{ix+1}')
         lyt.addWidget(self.tabs)
         self.setMinimumSize(1024, 780)
 
-    def set_frames(self, images: List[QImage]):
-        for frame, tab in zip(images, self.l_video_tabs):
-            tab.on_new_image(frame)
+    @staticmethod
+    def np_to_qimage(np_img):
+        height, width, channels = np_img.shape
+        return QtGui.QImage(np_img.copy(), width, height, channels*width,
+                            QtGui.QImage.Format_RGB888)
+
+    @Slot()
+    def set_frames(self):
+        try:
+            frames = self.queue.get_nowait()
+        except Empty:
+            return
+        ix = self.tabs.currentIndex()
+        self.l_video_tabs[ix].on_new_image(self.np_to_qimage(frames[ix]))
+        # for np_img, tab in zip(frames, self.l_video_tabs):
+        #     frame = self.np_to_qimage(np_img)
+        #     tab.on_new_image(frame)
 
 
 class Player(QtWidgets.QWidget):
@@ -119,7 +137,9 @@ class Player(QtWidgets.QWidget):
         lyt = QtWidgets.QHBoxLayout(self)
         lyt.addWidget(self.play_btn)
         lyt.addWidget(self.stop_btn)
+        lyt.addWidget(QtWidgets.QLabel('Playback speed'))
         lyt.addWidget(self.speed_sl)
+
         self.play_btn.clicked.connect(self.play_clicked)
         self.stop_btn.clicked.connect(self.stop_clicked)
         self.speed_sl.valueChanged.connect(self.speed_adjustment)
@@ -194,7 +214,7 @@ class PathPicker(QtWidgets.QWidget):
         lyt = QtWidgets.QHBoxLayout(self)
         self.path_le = QtWidgets.QLineEdit(parent=parent)
         self.path_le.setText("")
-        self.path_le.setPlaceholderText('Choose a file to save to')
+        self.path_le.setPlaceholderText('Choose a video base file')
         self.btn = QtWidgets.QPushButton('Choose...')
         lyt.addWidget(self.path_le)
         lyt.addWidget(self.btn)
@@ -218,3 +238,25 @@ class PathPicker(QtWidgets.QWidget):
         if dpath != '':
             self.path = dpath
 
+
+class Navigator(QtWidgets.QWidget):
+    previous = QtCore.Signal()
+    next = QtCore.Signal()
+
+    def __init__(self, parent: Optional[PySide2.QtWidgets.QWidget] = None) -> None:
+        super().__init__(parent)
+        lyt = QtWidgets.QHBoxLayout(self)
+        prev_btn = QtWidgets.QPushButton('Previous')
+        next_btn = QtWidgets.QPushButton('Next')
+        lyt.addWidget(prev_btn)
+        lyt.addWidget(next_btn)
+        prev_btn.clicked.connect(self._previous_clicked)
+        next_btn.clicked.connect(self._next_clicked)
+
+    @Slot()
+    def _previous_clicked(self):
+        self.previous.emit()
+
+    @Slot()
+    def _next_clicked(self):
+        self.next.emit()
