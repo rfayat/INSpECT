@@ -4,7 +4,7 @@
       "subject": "RF484",
       "date": "01/04/2022",
       "session": "test",
-      "uid": "RF484_220401_test",
+      "uid": "RF484_220401_test_ID0003",
       "folder": ".",
       "files": [
         "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-007200-cam_45810316-exampleID0003.avi",
@@ -19,7 +19,7 @@
       },
       "annotations": [
         {
-          "user": "Ghyomm",
+          "user": "remi",
           "date": "01/04/2022",
           "labels": [
             "grooming",
@@ -32,7 +32,7 @@
       "subject": "RF484",
       "date": "01/04/2022",
       "session": "test",
-      "uid": "RF484_220401_test",
+      "uid": "RF484_220401_test_ID0001",
       "folder": ".",
       "files": [
         "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_45810316-exampleID0001.avi",
@@ -47,10 +47,9 @@
       },
       "annotations": [
         {
-          "user": "Ghyomm",
+          "user": "remi",
           "date": "01/04/2022",
           "labels": [
-            "grooming",
             "scratching"
           ]
         }
@@ -60,7 +59,7 @@
       "subject": "RF484",
       "date": "01/04/2022",
       "session": "test",
-      "uid": "RF484_220401_test",
+      "uid": "RF484_220401_test_ID0002",
       "folder": ".",
       "files": [
         "/home/remi/TDS/Programmation/InProgress/r2g/video_examples/20211222_AM-RF010-00-018000-cam_49020380-exampleID0002.avi",
@@ -75,11 +74,10 @@
       },
       "annotations": [
         {
-          "user": "Ghyomm",
+          "user": "remi",
           "date": "01/04/2022",
           "labels": [
-            "grooming",
-            "scratching"
+            "grooming"
           ]
         }
       ]

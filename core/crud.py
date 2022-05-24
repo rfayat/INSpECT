@@ -110,7 +110,37 @@ def create_annotation(segment: Segment, user: str, date: str, label: str):
         segment.annotations.append(m_an)
     else:
         # Plays on the reference to the item
-        m_an.labels.append(label)
+        if label not in m_an.labels:
+            m_an.labels.append(label)
+    return segment
+
+
+def remove_annotation(segment: Segment, user: str, label: str):
+    """
+    Remove a label from a segment. Do it in a user specific manner
+
+    Parameters
+    ----------
+    segment
+    user
+    label
+
+    Returns
+    -------
+
+    """
+    m_an = None
+    for an in segment.annotations:
+        if an.user == user:
+            m_an = an
+            break
+    if m_an is None:
+        # No previous annotation was found, no need to remove anything
+        return segment
+    if label not in m_an.labels:
+        # This label is not present, can not remove it
+        return segment
+    m_an.labels.remove(label)
     return segment
 
 
@@ -128,7 +158,8 @@ def find_segments_label(vb: VideoBase, label: str) -> List[Segment]:
     matched: List[Segment]
     """
     matched: List[Segment] = []
-
+    if vb is None:
+        return matched
     # Could be a long list comprehension. Unrolled for now.
     for seg in vb.segments:
         for an in seg.annotations:

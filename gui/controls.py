@@ -1,3 +1,4 @@
+import typing
 from queue import Empty, Queue
 from pathlib import Path
 from typing import List
@@ -6,8 +7,9 @@ from core.models import Category
 from typing import Optional
 import PySide2
 from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtGui import QImage, QPainter, QPixmap
+from PySide2.QtGui import QImage, QPainter
 from PySide2.QtCore import QRectF, Slot, Signal
+from crud import find_category
 
 
 class VideoTab(QtWidgets.QWidget):
@@ -124,6 +126,8 @@ class MultiVid(QtWidgets.QWidget):
 class Player(QtWidgets.QWidget):
     play = Signal()
     stop = Signal()
+    prev = Signal()
+    next = Signal()
     speed_adjusted = Signal(int)
 
     def __init__(self, parent: Optional[PySide2.QtWidgets.QWidget] = None) -> None:
@@ -134,14 +138,20 @@ class Player(QtWidgets.QWidget):
         self.speed_sl.setRange(-500, -5)  # Large value = large interval = slow speed
         self.speed_sl.setSingleStep(1)
         self.speed_sl.setValue(-30)
+        self.prev_frame_btn = QtWidgets.QPushButton('&Backward')
+        self.next_frame_btn = QtWidgets.QPushButton('&Forward')
         lyt = QtWidgets.QHBoxLayout(self)
         lyt.addWidget(self.play_btn)
         lyt.addWidget(self.stop_btn)
         lyt.addWidget(QtWidgets.QLabel('Playback speed'))
         lyt.addWidget(self.speed_sl)
+        lyt.addWidget(self.prev_frame_btn)
+        lyt.addWidget(self.next_frame_btn)
 
         self.play_btn.clicked.connect(self.play_clicked)
         self.stop_btn.clicked.connect(self.stop_clicked)
+        self.prev_frame_btn.clicked.connect(self.prev_frame)
+        self.next_frame_btn.clicked.connect(self.next_frame)
         self.speed_sl.valueChanged.connect(self.speed_adjustment)
 
     @Slot()
@@ -151,6 +161,16 @@ class Player(QtWidgets.QWidget):
     @Slot()
     def stop_clicked(self):
         self.stop.emit()
+
+    @Slot()
+    def prev_frame(self):
+        self.stop.emit()
+        self.prev.emit()
+
+    @Slot()
+    def next_frame(self):
+        self.stop.emit()
+        self.next.emit()
 
     @Slot(int)
     def speed_adjustment(self, value):
@@ -184,14 +204,26 @@ class LabelGroup(QtWidgets.QWidget):
         self.states[label] = state > 0
         self.labels_updated.emit(self.states)
 
+    def reset_state(self):
+        for cb in self.all_cb:
+            cb.setChecked(False)
+
+    def check_label(self, label):
+        if label not in self.labels:
+            return
+        ix = self.labels.index(label)
+        self.all_cb[ix].setChecked(True)
+
 
 class LabelPanel(QtWidgets.QWidget):
+    new_state = Signal(str, dict)
+
     def __init__(self, categories: List[Category],
                  parent: Optional[PySide2.QtWidgets.QWidget] = None) -> None:
         super().__init__(parent)
         lyt = QtWidgets.QGridLayout(self)
-        groups = [LabelGroup(cat, self) for cat in categories]
-        for ix, gp in enumerate(groups):
+        self.groups = {cat.name: LabelGroup(cat, self) for cat in categories}
+        for ix, gp in enumerate(self.groups.values()):
             row = ix // 2
             col = ix % 2
             lyt.addWidget(gp, row, col)
@@ -202,6 +234,15 @@ class LabelPanel(QtWidgets.QWidget):
     @Slot(dict)
     def label_clicked(self, state: dict, category: str):
         self.states[category] = state
+        self.new_state.emit(category, state)
+
+    def reset_all(self):
+        for gp in self.groups.values():
+            gp.reset_state()
+
+    def check_label(self, category: str, label: str):
+        gp = self.groups[category]
+        gp.check_label(label)
 
 
 class PathPicker(QtWidgets.QWidget):
@@ -260,3 +301,47 @@ class Navigator(QtWidgets.QWidget):
     @Slot()
     def _next_clicked(self):
         self.next.emit()
+
+
+class LabelCreator(QtWidgets.QDialog):
+    def __init__(self, parent: typing.Optional[PySide2.QtWidgets.QWidget] = None) -> None:
+        super().__init__(parent)
+        self.setWindowTitle('Edit or add a label')
+        self._categories: List[Category] = []
+        main_lyt = QtWidgets.QVBoxLayout(self)
+        form_lyt = QtWidgets.QFormLayout()
+        self.cat_cb = QtWidgets.QComboBox(self)
+        self.labels_cb = QtWidgets.QComboBox(self)
+        self.label_le = QtWidgets.QLineEdit(self)
+        self.cat_cb.currentTextChanged.connect(self.category_changed)
+        self.cat_cb.setEditable(True)
+        form_lyt.addRow('Category', self.cat_cb)
+        form_lyt.addRow('Old label', self.labels_cb)
+        form_lyt.addRow('Label', self.label_le)
+        btn_lyt = QtWidgets.QHBoxLayout()
+        self.cancel_btn = QtWidgets.QPushButton('&Cancel')
+        self.ok_btn = QtWidgets.QPushButton('&Apply')
+        self.ok_btn.setDefault(True)
+        self.cancel_btn.clicked.connect(self.reject)
+        self.ok_btn.clicked.connect(self.accept)
+        btn_lyt.addWidget(self.cancel_btn)
+        btn_lyt.addWidget(self.ok_btn)
+        main_lyt.addLayout(form_lyt)
+        main_lyt.addLayout(btn_lyt)
+
+    def category_changed(self, cat_name):
+        self.labels_cb.clear()
+        self.labels_cb.addItem('')
+        r = find_category(self._categories, cat_name)
+        if r is None:
+            return
+        _, cat = r
+        self.labels_cb.addItems(cat.labels)
+
+    def edit_label(self, categories: List[Category]):
+        self._categories = categories
+        for cat in categories:
+            self.cat_cb.addItem(cat.name, cat)
+            # self.labels_cb.addItems(cat.labels)
+        if self.exec_():
+            return self.cat_cb.currentText(), self.labels_cb.currentText(), self.label_le.text()

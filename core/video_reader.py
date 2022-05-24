@@ -16,6 +16,7 @@ class VideoReader(QtCore.QObject):
             self._videos = None
         self._n_frames = 0
         self._c_frame = 0
+        self._playing = False
         self.begin = 0
         self.end = 0
         self.queue = Queue()
@@ -38,15 +39,28 @@ class VideoReader(QtCore.QObject):
 
     @video_files.setter
     def video_files(self, value):
+        was_playing = self._playing
+        if was_playing:
+            self.stop()
         self.close_all_videos()
         self._video_files = value
         self.open_all_videos()
+        if was_playing:
+            self.start()
 
     def start(self):
         self._timer.start()
+        self._playing = True
 
     def stop(self):
         self._timer.stop()
+        self._playing = False
+
+    def prev_frame(self):
+        self.c_frame -= 1
+
+    def next_frame(self):
+        self.c_frame += 1
 
     @property
     def interval(self):
