@@ -2,3 +2,6 @@ PySide2
 getpass4
 PIMS
 pydantic
+pyqt5
+av
+moviepy

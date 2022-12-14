@@ -9,7 +9,7 @@ import PySide2
 from PySide2 import QtWidgets, QtCore, QtGui
 from PySide2.QtGui import QImage, QPainter
 from PySide2.QtCore import QRectF, Slot, Signal
-from crud import find_category
+from core.crud import find_category
 
 
 class VideoTab(QtWidgets.QWidget):

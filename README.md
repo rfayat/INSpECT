@@ -1,5 +1,24 @@
 # r2g video annotator
 
+## Installation
+Upgrade pip (can prevent some issues with the installation of pyqt5), download the repository and install the requirements as follows :
+
+```bash
+$ pip install --upgrade pip
+$ git clone https://gitlab.com/TailoredDataSolutions/r2g.git
+$ cd r2g
+$ pip install -r requirements.txt
+```
+
+From the r2g folder you can the launch the gui by running:
+
+```bash
+$ python -m gui.ui
+```
+
+An example video dataset for testing the ui is available [here](https://drive.google.com/file/d/1QXyP-PK-j5aPQeegqqKgihsdWYlcfDOL/view?usp=sharing).
+
+
 ## GUI use
 
 1. To launch, execute the `ui.py` file from the `r2g` directory.
@@ -16,8 +35,8 @@
 Labels are organized by categories. There are multiple categories, and multiple label per category.
 All label editing happens in the dialog box opened by clicking on the `Edit labels` button.
 * To rename a category, edit its name in the dialog box.
-* To rename a label choose the current name in the `Old label` combobox. 
-Set a new name below in the `Label` line. New name is set to all previous video labeled in the _VideoBase_. 
+* To rename a label choose the current name in the `Old label` combobox.
+Set a new name below in the `Label` line. New name is set to all previous video labeled in the _VideoBase_.
 * To generate a new label, leave the `Old label` selector empty. Set a new name.
 
 ##  <a name="video_base"></a> Structure of the Video Base JSON file
@@ -30,7 +49,7 @@ It is a JSON file with the following structure:
   * "session": str, session id,
   * "uid": str, some sort of unique identifier for this clip,
   * "folder": str, path the folder containing the videos. Could be used for easy relative paths. Not used now.
-  * "files": list of str, paths to the video clips of each camera. 
+  * "files": list of str, paths to the video clips of each camera.
   * "frames": dict
     * "begin": int, first frame index
     * "end": int, last frame index
