@@ -85,6 +85,7 @@ class UI(QtWidgets.QMainWindow):
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         self.auto_save_annotations()
+        self.auto_save_labels()
         self.video_reader.close_all_videos()
         print('Closing everything')
         event.accept()
@@ -146,6 +147,7 @@ class UI(QtWidgets.QMainWindow):
             # Renaming a label
             self.categories, self._vb = crud.rename_label(self.categories, self._vb,
                                                           old_label, new_label)
+        self.auto_save_labels()
         new_panel = ctrl.LabelPanel(self.categories)
         new_panel.new_state.connect(self.new_annotation)
         found_item = self._right_lyt.replaceWidget(self.panel, new_panel)
@@ -186,6 +188,11 @@ class UI(QtWidgets.QMainWindow):
         json_path = orig_path.parent / f'{orig_path.stem}_{self._now}.json'
         with open(json_path, 'w') as jf:
             jf.write(self._vb.json(indent=2))
+
+    def auto_save_labels(self):
+        json_path = Path("labels.json")
+        with json_path.open('w') as jf:
+            jf.write(crud.AllGroups(groups=self.categories).json(indent=2))
 
     @Slot()
     def prev_seg(self):
