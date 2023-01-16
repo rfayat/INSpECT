@@ -102,7 +102,24 @@ class MultiVid(QtWidgets.QWidget):
             # lyt.addWidget(tab)
             self.tabs.addTab(tab, f'Camera &{ix+1}')
         lyt.addWidget(self.tabs)
+        self._c_tab_ix = 0
         self.setMinimumSize(1024, 780)
+
+    @property
+    def c_tab_ix(self):
+        return self._c_tab_ix
+
+    @c_tab_ix.setter
+    def c_tab_ix(self, value):
+        value = value % len(self.l_video_tabs)
+        self._c_tab_ix = value
+        self.tabs.setCurrentWidget(self.l_video_tabs[value])
+
+    def prev_tab(self):
+        self.c_tab_ix -= 1
+
+    def next_tab(self):
+        self.c_tab_ix += 1
 
     @staticmethod
     def np_to_qimage(np_img):
@@ -117,7 +134,8 @@ class MultiVid(QtWidgets.QWidget):
         except Empty:
             return
         ix = self.tabs.currentIndex()
-        self.l_video_tabs[ix].on_new_image(self.np_to_qimage(frames[ix]))
+        qimage = self.np_to_qimage(frames[ix])
+        self.l_video_tabs[ix].on_new_image(qimage.copy())
         # for np_img, tab in zip(frames, self.l_video_tabs):
         #     frame = self.np_to_qimage(np_img)
         #     tab.on_new_image(frame)
@@ -287,12 +305,12 @@ class Navigator(QtWidgets.QWidget):
     def __init__(self, parent: Optional[PySide2.QtWidgets.QWidget] = None) -> None:
         super().__init__(parent)
         lyt = QtWidgets.QHBoxLayout(self)
-        prev_btn = QtWidgets.QPushButton('Previous')
-        next_btn = QtWidgets.QPushButton('Next')
-        lyt.addWidget(prev_btn)
-        lyt.addWidget(next_btn)
-        prev_btn.clicked.connect(self._previous_clicked)
-        next_btn.clicked.connect(self._next_clicked)
+        self.prev_btn = QtWidgets.QPushButton('Previous')
+        self.next_btn = QtWidgets.QPushButton('Next')
+        lyt.addWidget(self.prev_btn)
+        lyt.addWidget(self.next_btn)
+        self.prev_btn.clicked.connect(self._previous_clicked)
+        self.next_btn.clicked.connect(self._next_clicked)
 
     @Slot()
     def _previous_clicked(self):

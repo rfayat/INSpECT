@@ -6,7 +6,7 @@ import sys
 from core import crud
 from core.video_reader import VideoReader
 from PySide2 import QtWidgets, QtCore, QtGui
-from PySide2.QtCore import Slot
+from PySide2.QtCore import Slot, Qt
 import gui.controls as ctrl
 from datetime import datetime
 from getpass import getuser
@@ -75,6 +75,12 @@ class UI(QtWidgets.QMainWindow):
         self.player.next.connect(self.video_reader.next_frame)
         self.player.speed_adjusted.connect(self.video_reader.change_speed)
         self.setMinimumSize(1500, 1000)
+        # Shortcuts
+        next_vid_ks = QtWidgets.QShortcut(QtGui.QKeySequence('Right'), self, self.next_seg)
+        prev_vid_ks = QtWidgets.QShortcut(QtGui.QKeySequence('Left'), self, self.prev_seg)
+        next_cam = QtWidgets.QShortcut(QtGui.QKeySequence(Qt.Key_PageDown), self, self.next_tab)
+        prev_cam = QtWidgets.QShortcut(QtGui.QKeySequence(Qt.Key_PageUp), self, self.prev_tab)
+
         # Internal data
         self._vb: Optional[crud.VideoBase] = None
         self._order: Optional[np.ndarray] = None
@@ -82,6 +88,12 @@ class UI(QtWidgets.QMainWindow):
         self._c_seg: Optional[crud.Segment] = None
         # Open main window
         self.show()
+
+    def next_tab(self):
+        self.video_tabs.next_tab()
+
+    def prev_tab(self):
+        self.video_tabs.prev_tab()
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         self.auto_save_annotations()
