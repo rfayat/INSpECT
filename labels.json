@@ -10,7 +10,8 @@
     {
       "name": "moving",
       "labels": [
-        "running"
+        "running",
+        "walking"
       ]
     }
   ]
