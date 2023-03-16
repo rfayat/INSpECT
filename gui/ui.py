@@ -190,8 +190,26 @@ class UI(QtWidgets.QMainWindow):
     def open_file(self, new_path):
         self._vb = crud.load_videobase(new_path)
         self.c_path = new_path
-        self._order = np.random.permutation(np.arange(len(self._vb.segments)))
+        labels_ticked_all = self.get_labels_ticked()
+        # For random permutations, remove the labels_ticked_all argument
+        self._order = crud.create_order(self._vb, labels_ticked_all)
         self.seg_ix = 0
+   
+    def get_labels_states(self):
+        "Return a dictionary containing the states of each categories' labels."
+        labels_state_all = {}
+        for category, label_group in self.panel.groups.items():
+            labels_state_all[category] = label_group.states
+        return labels_state_all
+    
+    def get_labels_ticked(self):
+        "Return a list of category / label pairs with the currently ticked labels."
+        labels_ticked_all = []
+        for category, states in self.get_labels_states().items():
+            for label, is_ticked in states.items():
+                if is_ticked:
+                    labels_ticked_all.append([category, label])
+        return labels_ticked_all
 
     def auto_save_annotations(self):
         if self.c_path is None:

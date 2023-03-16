@@ -19,6 +19,10 @@ class Annotation(BaseModel):
     date: str
     labels: List[str]
 
+    def label_in_annotation(self, label):
+        "Return True if the input label is in the annotations."
+        return label in self.labels
+
 
 class Segment(BaseModel):
     subject: str
@@ -29,11 +33,30 @@ class Segment(BaseModel):
     files: List[str]
     frames: Frames
     annotations: List[Annotation]
+    
+    def has_annotations(self) -> bool:
+        "Return True the segment has annotations."
+        return len(self.annotations) > 0
+    
+    def label_in_segment(self, label: str) -> bool:
+        "Return True if any of the annotations has the input label."
+        if self.has_annotations():
+            return any(a.label_in_annotation(label) for a in self.annotations)
+        else:
+            return False
 
 
 class VideoBase(BaseModel):
     segments: List[Segment]
     notes: Optional[str]
+    
+    def segments_have_annotations(self) -> List[bool]:
+        "Return a list of bool indicating if the segments are annotated."
+        return [s.has_annotations() for s in self.segments]
+    
+    def label_in_segments(self, label: str) -> List[bool]:
+        "Return a list of bool indicating if each segment has an input label."
+        return [s.label_in_segment(label) for s in self.segments]
 
 
 class Category(BaseModel):
