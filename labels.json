@@ -1,17 +1,103 @@
 {
   "groups": [
     {
-      "name": "cleaning",
+      "name": "Head/body grooming",
       "labels": [
-        "grooming",
-        "scratching"
+        "Head_grooming_symmetrical",
+        "Head_grooming_L",
+        "Head_grooming_R",
+        "Body_grooming_L",
+        "Body_grooming_R",
+        "Body_grooming_symmetrical"
       ]
     },
     {
-      "name": "moving",
+      "name": "Other groomings",
       "labels": [
-        "running",
-        "walking"
+        "Tail_grooming_L",
+        "Tail_grooming_R",
+        "Single_stroke",
+        "Paw_licking",
+        "Tail_chasing"
+      ]
+    },
+    {
+      "name": "Scratching",
+      "labels": [
+        "Head_scratch_L",
+        "Head_scratch_R",
+        "Body_scratch_L",
+        "Body_scratch_R",
+        "Before_scratch_L",
+        "Before_scratch_R"
+      ]
+    },
+    {
+      "name": "Locomotion",
+      "labels": [
+        "Walking",
+        "Trotting",
+        "Galloping",
+        "Walking_initiation",
+        "Limping"
+      ]
+    },
+    {
+      "name": "Sniffing",
+      "labels": [
+        "Sniffing_against_floor-wall",
+        "Sniffing_while_walking",
+        "Sniffing_while_rearing",
+        "Sniffing_head_up",
+        "Sniffing_at_object"
+      ]
+    },
+    {
+      "name": "Reorientations",
+      "labels": [
+        "Head_turn_L",
+        "Head_turn_R",
+        "Head_up",
+        "Head_down",
+        "Jump_turn_L",
+        "Jump_turn_R"
+      ]
+    },
+    {
+      "name": "Rearing",
+      "labels": [
+        "Initiation",
+        "Rearing_up",
+        "Rearing_end_symmetrical",
+        "Rearing_end_L",
+        "Rearing_end_R"
+      ]
+    },
+    {
+      "name": "Object oriented",
+      "labels": [
+        "Eating",
+        "Food_manipulation",
+        "Cable_down",
+        "Cable_up",
+        "Licking"
+      ]
+    },
+    {
+      "name": "Unsorted",
+      "labels": [
+        "Wet_dog_shake",
+        "Immobility",
+        "Undefined_twitch",
+        "Undefined"
+      ]
+    },
+    {
+      "name": "Skeleton issues",
+      "labels": [
+        "Bad_skeleton_no_spine",
+        "Bad_skeleton_head",
+        "Triangulation"
       ]
     }
   ]
