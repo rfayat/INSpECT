@@ -6,37 +6,43 @@ import numpy as np
 
 
 def create_order(vb: VideoBase,
-                 labels_ticked_all: Optional[List[List[str]]] = None) :
-    "Create the order in which videos will be shown."
+                 labels_ticked_all: Optional[List[List[str]]] = None):
+    """Create the order in which videos will be shown."""
     print(f"Currently ticked labels: \n{labels_ticked_all}")
 
     idx_all = np.arange(len(vb.segments))
     
     # Random permutation if the ticked labels were not provided
     if labels_ticked_all is None:
-        return np.random.permutation(idx_all)
+        return np.random.permutation(idx_all), len(vb.segments), 0
     
     # If no labels were ticked, put the unlabelled segments first
     if len(labels_ticked_all) == 0:
         is_not_labelled = ~np.array(vb.segments_have_annotations())
-        print(f"Total segments: {len(is_not_labelled)}")
-        print(f"Currently unlabelled: {is_not_labelled.sum()}")
+        n_total_seg = len(is_not_labelled)
+        print(f"Total segments: {n_total_seg}")
+        n_unlabelled = is_not_labelled.sum()
+        print(f"Currently unlabelled: {n_unlabelled}")
         idx_not_labelled = np.random.permutation(idx_all[is_not_labelled])
         idx_labelled = np.random.permutation(idx_all[~is_not_labelled])
-        return np.append(idx_not_labelled, idx_labelled)
+        order = np.append(idx_not_labelled, idx_labelled)
+        return order, n_total_seg, n_total_seg - n_unlabelled
     
     # If some labels were ticked, put them first
     else:
         labels_ticked_all = [l[1] for l in labels_ticked_all]
         labels_are_ticked = np.vstack([vb.label_in_segments(label) for label in labels_ticked_all])
         any_label_ticked = np.any(labels_are_ticked, axis=0)
-        print(f"Total segments: {len(any_label_ticked)}")
-        print(f"Currently with the ticked labels: {any_label_ticked.sum()}")
+        n_total_seg = len(any_label_ticked)
+        print(f"Total segments: {n_total_seg}")
+        n_with_ticked = any_label_ticked.sum()
+        print(f"Currently with the ticked labels: {n_with_ticked}")
         # Create the new order, ticked element first
         idx_ticked = np.random.permutation(idx_all[any_label_ticked])
         idx_not_ticked = np.random.permutation(idx_all[~any_label_ticked])
-        
-        return np.append(idx_ticked, idx_not_ticked)
+
+        order = np.append(idx_ticked, idx_not_ticked)
+        return order, n_total_seg, n_with_ticked
  
 
 def load_videobase(json_path: Union[Path, str]):

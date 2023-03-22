@@ -48,9 +48,11 @@ class UI(QtWidgets.QMainWindow):
         self.video_tabs = ctrl.MultiVid(self, self.queue)
         self.frames_ready.connect(self.video_tabs.set_frames)
         self.player = ctrl.Player(self)
+        self.stats = ctrl.Satus(self)
         left_lyt.addLayout(top_bar_lyt)
         left_lyt.addWidget(self.video_tabs)
         left_lyt.addWidget(self.player)
+        left_lyt.addWidget(self.stats)
         splitter.addWidget(left_wdg)
         # Right
         right_wdg = QtWidgets.QWidget(self)
@@ -111,6 +113,7 @@ class UI(QtWidgets.QMainWindow):
     def c_seg(self, value: crud.Segment):
         self._c_seg = value
         self._vb.segments[self._order[self._c_seg_ix]] = value
+        self.stats.c_viewing_lbl.setText(value.uid)
 
     @property
     def seg_ix(self):
@@ -191,19 +194,21 @@ class UI(QtWidgets.QMainWindow):
         self._vb = crud.load_videobase(new_path)
         self.c_path = new_path
         labels_ticked_all = self.get_labels_ticked()
-        # For random permutations, remove the labels_ticked_all argument
-        self._order = crud.create_order(self._vb, labels_ticked_all)
+        # For random permutations, remove the labels_ticked_all argument
+        self._order, n_total, n_labeled = crud.create_order(self._vb, labels_ticked_all)
+        self.stats.c_labeled_lbl.setText(f'{n_labeled}')
+        self.stats.c_total_lbl.setText(f'{n_total}')
         self.seg_ix = 0
    
     def get_labels_states(self):
-        "Return a dictionary containing the states of each categories' labels."
+        """Return a dictionary containing the states of each categories' labels."""
         labels_state_all = {}
         for category, label_group in self.panel.groups.items():
             labels_state_all[category] = label_group.states
         return labels_state_all
     
     def get_labels_ticked(self):
-        "Return a list of category / label pairs with the currently ticked labels."
+        """Return a list of category / label pairs with the currently ticked labels."""
         labels_ticked_all = []
         for category, states in self.get_labels_states().items():
             for label, is_ticked in states.items():
@@ -248,4 +253,3 @@ if __name__ == '__main__':
     qApp = QtWidgets.QApplication(sys.argv)
     w = UI()
     sys.exit(qApp.exec_())
-
