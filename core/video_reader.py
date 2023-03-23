@@ -1,7 +1,7 @@
-from multiprocessing import Queue
+from queue import Queue
 from typing import List, Optional
 from pims import Video
-from PySide2 import QtCore, QtGui
+from PySide2 import QtCore
 
 
 class VideoReader(QtCore.QObject):

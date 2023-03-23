@@ -363,3 +363,24 @@ class LabelCreator(QtWidgets.QDialog):
             # self.labels_cb.addItems(cat.labels)
         if self.exec_():
             return self.cat_cb.currentText(), self.labels_cb.currentText(), self.label_le.text()
+
+
+class Satus(QtWidgets.QWidget):
+    def __init__(self, parent: typing.Optional[PySide2.QtWidgets.QWidget] = None) -> None:
+        super().__init__(parent)
+        h_lyt = QtWidgets.QHBoxLayout(self)
+        h_lyt.addWidget(QtWidgets.QLabel('Viewing:'))
+        self.c_viewing_lbl = QtWidgets.QLabel(self)
+        h_lyt.addWidget(self.c_viewing_lbl)
+        h_lyt.addSpacerItem(QtWidgets.QSpacerItem(50, 1, QtWidgets.QSizePolicy.Fixed,
+                                                  QtWidgets.QSizePolicy.Fixed))
+
+        h_lyt.addWidget(QtWidgets.QLabel('Labeled / Total:'))
+        self.c_labeled_lbl = QtWidgets.QLabel(self)
+        h_lyt.addWidget(self.c_labeled_lbl)
+        h_lyt.addWidget(QtWidgets.QLabel(' / '))
+        self.c_total_lbl = QtWidgets.QLabel(self)
+        h_lyt.addWidget(self.c_total_lbl)
+        h_lyt.addSpacerItem(QtWidgets.QSpacerItem(1, 1, QtWidgets.QSizePolicy.Expanding,
+                                                  QtWidgets.QSizePolicy.Fixed))
+
