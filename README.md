@@ -18,6 +18,11 @@ $ python -m gui.ui
 
 An example video dataset for testing the ui is available [here](https://drive.google.com/file/d/1QXyP-PK-j5aPQeegqqKgihsdWYlcfDOL/view?usp=sharing).
 
+By default the `labels.json` file in your local copy of the repository will be used to list available labels. Alternatively, you can provide the path to another label file as follows:
+
+```bash
+$ python -m gui.ui path/to/other_labels.json
+```
 
 ## GUI use
 

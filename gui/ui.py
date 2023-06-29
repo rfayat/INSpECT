@@ -15,7 +15,9 @@ from getpass import getuser
 class UI(QtWidgets.QMainWindow):
     frames_ready = QtCore.Signal()
 
-    def __init__(self, parent: QtWidgets.QWidget = None):
+    def __init__(self, parent: QtWidgets.QWidget = None, n_video=5, json_path="labels.json"):
+        self.n_video = n_video
+        self.json_path = json_path
         super().__init__(parent)
         self.setWindowTitle('r2g - Video Annotator Multi-Angles')
         self.setWindowIconText('r2g')
@@ -45,7 +47,7 @@ class UI(QtWidgets.QMainWindow):
         top_bar_lyt.addWidget(self.label_add_btn)
         top_bar_lyt.setStretch(0, 3)
         top_bar_lyt.setStretch(1, 1)
-        self.video_tabs = ctrl.MultiVid(self, self.queue)
+        self.video_tabs = ctrl.MultiVid(self, self.queue, min_vid=self.n_video)
         self.frames_ready.connect(self.video_tabs.set_frames)
         self.player = ctrl.Player(self)
         self.stats = ctrl.Satus(self)
@@ -57,7 +59,7 @@ class UI(QtWidgets.QMainWindow):
         # Right
         right_wdg = QtWidgets.QWidget(self)
         self._right_lyt = QtWidgets.QVBoxLayout(right_wdg)
-        self.categories = crud.load_labels('labels.json')
+        self.categories = crud.load_labels(self.json_path)
         self.panel = ctrl.LabelPanel(self.categories)
         self.panel.new_state.connect(self.new_annotation)
         nav = ctrl.Navigator(self)
@@ -225,7 +227,7 @@ class UI(QtWidgets.QMainWindow):
             jf.write(self._vb.json(indent=2))
 
     def auto_save_labels(self):
-        json_path = Path("labels.json")
+        json_path = Path(self.json_path).absolute()
         with json_path.open('w') as jf:
             jf.write(crud.AllGroups(groups=self.categories).json(indent=2))
 
@@ -251,5 +253,12 @@ class UI(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     qApp = QtWidgets.QApplication(sys.argv)
-    w = UI()
+    
+    #  Could write a clean argument parser
+    if len(sys.argv) >= 2:
+        json_path = sys.argv[1]
+    else:
+        json_path = "labels.json"
+
+    w = UI(json_path=json_path)
     sys.exit(qApp.exec_())
