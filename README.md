@@ -3,7 +3,7 @@
 Interface for Navigating Spates of video Excerpts and Categorizing Them.
 
 ## Installation
-Upgrade pip (can preveINSpECTnt some issues with the installation of pyqt5), download the repository and install the requirements as follows :
+Upgrade pip (can prevent some issues with the installation of pyqt5), download the repository and install the requirements as follows :
 
 ```bash
 $ pip install --upgrade pip
