@@ -38,8 +38,7 @@
         "Walking",
         "Trotting",
         "Galloping",
-        "Walking_initiation",
-        "Limping"
+        "Walking_initiation"
       ]
     },
     {
@@ -48,8 +47,7 @@
         "Sniffing_against_floor-wall",
         "Sniffing_while_walking",
         "Sniffing_while_rearing",
-        "Sniffing_head_up",
-        "Sniffing_at_object"
+        "Sniffing_head_up"
       ]
     },
     {
@@ -73,16 +71,7 @@
         "Rearing_end_R"
       ]
     },
-    {
-      "name": "Object oriented",
-      "labels": [
-        "Eating",
-        "Food_manipulation",
-        "Cable_down",
-        "Cable_up",
-        "Licking"
-      ]
-    },
+
     {
       "name": "Unsorted",
       "labels": [
@@ -90,14 +79,6 @@
         "Immobility",
         "Undefined_twitch",
         "Undefined"
-      ]
-    },
-    {
-      "name": "Skeleton issues",
-      "labels": [
-        "Bad_skeleton_no_spine",
-        "Bad_skeleton_head",
-        "Triangulation"
       ]
     }
   ]

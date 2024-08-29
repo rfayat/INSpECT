@@ -3,6 +3,9 @@
 Interface for Navigating Spates of video Excerpts and Categorizing Them.
 
 ## Installation
+Follow the instructions provided [here](https://github.com/PySide/pyside2/wiki/Dependencies) to install pyside2 dependencies.
+
+
 Upgrade pip (can prevent some issues with the installation of pyqt5), download the repository and install the requirements as follows :
 
 ```bash
@@ -12,13 +15,19 @@ $ cd r2g
 $ pip install -r requirements.txt
 ```
 
+Or alternatively using conda:
+
+```bash
+$ conda create --name dissect python=3.7.6 pyside2 PIMS pydantic av moviepy
+$ conda activate dissect
+$ pip install getpass4 pyqt5
+```
+
 From the r2g folder you can the launch the gui by running:
 
 ```bash
 $ python -m gui.ui
 ```
-
-An example video dataset for testing the ui is available [here](https://drive.google.com/file/d/1QXyP-PK-j5aPQeegqqKgihsdWYlcfDOL/view?usp=sharing).
 
 By default the `labels.json` file in your local copy of the repository will be used to list available labels. Alternatively, you can provide the path to another label file as follows:
 
@@ -36,6 +45,16 @@ $ python -m gui.ui path/to/other_labels.json
 6. Videos can be viewed frame by frame using the `Backward` and `Forward` buttons
 7. One can scroll through clips using the `Previous` and `Next` buttons
 8. Checking / Unchecking the labels checkboxes will update the labels of the currently viewed video. Saving is automatic
+
+## Testing the GUI
+
+An example video dataset for testing the ui is available [here](https://drive.google.com/drive/folders/1XJVYgZSXY3PVUDiT1vgqhJmSErdgJGaz?usp=sharing). Download the files in your local copy of INSpECT unzip the file and launch the gui using `python -m gui.ui`. Then, click on `choose` in the upper part of the window, and select the file `INSpECT_examples/schema.json`. 
+
+After labeling multi-view video segments, a new json file with the labels will be saved in the same directory as the original `schema.json file`.
+
+
+
+
 
 ##  <a name="label_edit"></a> Editing labels
 
