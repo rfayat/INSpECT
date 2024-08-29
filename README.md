@@ -52,7 +52,7 @@ An example video dataset for testing the ui is available [here](https://drive.go
 
 After labeling multi-view video segments, a new json file with the labels will be saved in the same directory as the original `schema.json file`.
 
-
+![UI example](INSpECT_ui.gif)
 
 
 
