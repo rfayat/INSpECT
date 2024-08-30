@@ -18,8 +18,8 @@ $ pip install -r requirements.txt
 Or alternatively using conda:
 
 ```bash
-$ conda create --name dissect python=3.7.6 pyside2 PIMS pydantic av moviepy
-$ conda activate dissect
+$ conda create --name inspect python=3.7.6 pyside2 PIMS pydantic av moviepy
+$ conda activate inspect
 $ pip install getpass4 pyqt5
 ```
 
