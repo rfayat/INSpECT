@@ -10,7 +10,7 @@ Upgrade pip (can prevent some issues with the installation of pyqt5), download t
 
 ```bash
 $ pip install --upgrade pip
-$ git clone https://gitlab.com/TailoredDataSolutions/r2g.git
+$ git clone https://github.com/rfayat/INSpECT.git
 $ cd r2g
 $ pip install -r requirements.txt
 ```
