@@ -2,6 +2,8 @@
 
 Interface for Navigating Spates of video Excerpts and Categorizing Them.
 
+Jointly developed with [AquiNeuro](https://aquineuro.eu/en/team-en/) for the article [Fayat et al. 2024. (preprint)](https://www.biorxiv.org/content/10.1101/2024.09.20.613901v1), doi:[10.1101/2024.09.20.613901](https://doi.org/10.1101/2024.09.20.613901). If you use parts of this code in a scientific publication, please be kind enough to include a citation of the original publication.
+
 ## Installation
 Follow the instructions provided [here](https://github.com/PySide/pyside2/wiki/Dependencies) to install pyside2 dependencies.
 
