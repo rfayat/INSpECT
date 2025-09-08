@@ -1,4 +1,5 @@
 # INSpECT
+[![DOI](https://zenodo.org/badge/825763459.svg)](https://zenodo.org/badge/latestdoi/825763459)
 
 Interface for Navigating Spates of video Excerpts and Categorizing Them.
 
